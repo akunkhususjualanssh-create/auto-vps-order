@@ -235,7 +235,7 @@ bot.on('text', async (msg) => {
 
 /* ================= START & STABILITAS ================= */
 console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
-bot.launch({ dropPendingUpdates: true }).then(async () => {
+bot.launch({ dropPendingUpdates: false }).then(async () => {
   console.log('[BOT] Polling dihentikan dengan bersih.');
   await recoverPendingDeliveries();
 }).catch(e => {
@@ -246,7 +246,7 @@ bot.launch({ dropPendingUpdates: true }).then(async () => {
     console.error('[BOT] Solusi: revoke token di @BotFather lalu isi BOT_TOKEN baru di .env');
     console.error('[BOT] Menunggu 30 detik lalu coba lagi otomatis...');
     setTimeout(() => {
-      bot.launch({ dropPendingUpdates: true }).then(async () => {
+      bot.launch({ dropPendingUpdates: false }).then(async () => {
         console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
         await recoverPendingDeliveries();
       }).catch(() => setTimeout(() => process.exit(1), 30000));
