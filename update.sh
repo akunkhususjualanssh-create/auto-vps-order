@@ -2,12 +2,12 @@
 # ============================================================
 #  GEN SSH STORE — UPDATE BOT (aman: data & .env tidak disentuh)
 #  Jalankan di VPS:
-#    bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/update.sh)
+#    bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/update.sh)
 #  atau:
-#    wget -q -O /root/update-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/update.sh && bash /root/update-bot.sh
+#    wget -q -O /root/update-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/update.sh && bash /root/update-bot.sh
 # ============================================================
 set -e
-DIR="/root/bot-auto-order-vps"
+DIR="/root/auto-vps-order"
 C_G='\033[1;32m'; C_Y='\033[1;33m'; C_R='\033[1;31m'; C_N='\033[0m'
 ok() { printf "${C_G}✅${C_N} %s\n" "$1"; }
 warn() { printf "${C_Y}⚠️${C_N} %s\n" "$1"; }

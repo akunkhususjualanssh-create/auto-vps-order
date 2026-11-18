@@ -2,13 +2,13 @@
 # ============================================================
 #  GEN SSH STORE — INSTALLER SATU PERINTAH (remote)
 #  Jalankan di VPS:
-#    bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/installer.sh)
+#    bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/installer.sh)
 #  atau:
-#    wget -q -O /root/install-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/installer.sh && bash /root/install-bot.sh
+#    wget -q -O /root/install-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/installer.sh && bash /root/install-bot.sh
 # ============================================================
 set -e
-REPO="https://github.com/akunkhususjualanssh-create/bot-auto-order-vps.git"
-DIR="/root/bot-auto-order-vps"
+REPO="https://github.com/akunkhususjualanssh-create/auto-vps-order.git"
+DIR="/root/auto-vps-order"
 C_G='\033[1;32m'; C_Y='\033[1;33m'; C_N='\033[0m'
 ok() { printf "${C_G}✅${C_N} %s\n" "$1"; }
 

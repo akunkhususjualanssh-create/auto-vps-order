@@ -9,20 +9,20 @@ Bot toko VPS otomatis: pelanggan pilih paket → bayar (QRIS GoPay otomatis) →
 
 **Install bot (interaktif — nanya BOT_TOKEN, ADMIN_ID, QRIS):**
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/installer.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/installer.sh)
 ```
 atau:
 ```bash
-wget -q -O /root/install-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/installer.sh && bash /root/install-bot.sh
+wget -q -O /root/install-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/installer.sh && bash /root/install-bot.sh
 ```
 
 **Update bot (tanpa hilang data & .env):**
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/update.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/update.sh)
 ```
 atau:
 ```bash
-wget -q -O /root/update-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/bot-auto-order-vps/main/update.sh && bash /root/update-bot.sh
+wget -q -O /root/update-bot.sh https://raw.githubusercontent.com/akunkhususjualanssh-create/auto-vps-order/main/update.sh && bash /root/update-bot.sh
 ```
 
 ---
