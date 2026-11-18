@@ -234,8 +234,9 @@ bot.on('text', async (msg) => {
 });
 
 /* ================= START & STABILITAS ================= */
+console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
 bot.launch({ dropPendingUpdates: true }).then(async () => {
-  console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
+  console.log('[BOT] Polling dihentikan dengan bersih.');
   await recoverPendingDeliveries();
 }).catch(e => {
   const msg = e.message || '';
