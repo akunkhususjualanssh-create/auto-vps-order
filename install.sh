@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 #  GEN SSH STORE — Installer Interaktif Bot Auto Order VPS
-#  Pakai: git clone <repo> && cd bot-auto-order-vps && bash install.sh
+#  Pakai: git clone <repo> && cd auto-vps-order && bash install.sh
 #  Installer nanya semua data (token, admin, QRIS) lalu bot langsung jalan.
 # ============================================================
 set -e
