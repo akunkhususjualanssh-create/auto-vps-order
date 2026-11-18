@@ -234,33 +234,56 @@ bot.on('text', async (msg) => {
 });
 
 /* ================= START & STABILITAS ================= */
-console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
-bot.launch({ dropPendingUpdates: false }).then(async () => {
-  console.log('[BOT] Polling dihentikan dengan bersih.');
-  await recoverPendingDeliveries();
-}).catch(e => {
-  const msg = e.message || '';
-  if (msg.includes('409') || msg.includes('Conflict')) {
-    // Token dipakai instance lain — tunggu & coba lagi, jangan crash-loop.
-    console.error('[BOT] 409 Conflict: token BOT_TOKEN sedang dipakai bot lain di tempat lain.');
-    console.error('[BOT] Solusi: revoke token di @BotFather lalu isi BOT_TOKEN baru di .env');
-    console.error('[BOT] Menunggu 30 detik lalu coba lagi otomatis...');
-    setTimeout(() => {
-      bot.launch({ dropPendingUpdates: false }).then(async () => {
-        console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
-        await recoverPendingDeliveries();
-      }).catch(() => setTimeout(() => process.exit(1), 30000));
-    }, 30000);
-  } else {
-    console.error('[BOT] Gagal start:', msg);
-    process.exit(1);
-  }
-});
-
+// Handler diagnosa didaftarkan SEBELUM polling supaya semua pesan tercatat.
 bot.on('message', (ctx, next) => {
   console.log(`[RECV] dari ${ctx.from?.id} (${ctx.from?.username || ctx.from?.first_name || '?'}): ${String(ctx.message?.text || ctx.message?.caption || '[bukan teks]').slice(0, 60)}`);
   return next();
 });
+
+console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
+
+// Polling manual (bukan bot.launch) — full kontrol offset & log, tahan 409/502.
+let __offset = 0;
+let __pollCount = 0;
+let __errors = 0;
+
+async function pollLoop() {
+  try { await bot.telegram.deleteWebhook({ drop_pending_updates: false }); } catch (_) {}
+  console.log('[POLL] Loop polling manual aktif (long-poll 25s).');
+  for (;;) {
+    try {
+      const updates = await bot.telegram.callApi('getUpdates', {
+        offset: __offset, timeout: 25, limit: 100,
+        allowed_updates: ['message', 'callback_query']
+      });
+      __pollCount++;
+      if (__pollCount % 40 === 0) console.log(`[POLL] hidup | siklus ${__pollCount} | offset ${__offset} | error ${__errors}`);
+      if (Array.isArray(updates)) {
+        for (const u of updates) {
+          __offset = u.update_id + 1;
+          bot.handleUpdate(u).catch((e) => console.error('[UPDATE-ERR]', e.message || e));
+        }
+      }
+    } catch (e) {
+      __errors++;
+      const msg = e.message || String(e);
+      if (msg.includes('409') || msg.includes('Conflict')) {
+        console.error('[POLL] 409 Conflict — token dipakai instance lain. Coba lagi 15 detik...');
+        await new Promise(r => setTimeout(r, 15000));
+      } else if (msg.includes('502') || msg.includes('504') || msg.includes('ETIMEDOUT') || msg.includes('ECONNRESET') || msg.includes('socket hang up')) {
+        console.error('[POLL] Gangguan jaringan/Telegram:', msg, '— ulang 3 detik.');
+        await new Promise(r => setTimeout(r, 3000));
+      } else {
+        console.error('[POLL] Error:', msg, '— ulang 5 detik.');
+        await new Promise(r => setTimeout(r, 5000));
+      }
+    }
+  }
+}
+
+pollLoop().catch((e) => { console.error('[POLL] Fatal:', e.message || e); process.exit(1); });
+recoverPendingDeliveries().catch((e) => console.error('[RECOVER]', e.message || e));
+
 bot.on('polling_error', (e) => console.error('[POLLING]', e.message || e));
 process.on('uncaughtException', (err) => console.error('[UNCAUGHT]', err && err.stack ? err.stack : err));
 process.on('unhandledRejection', (r) => console.error('[UNHANDLED]', r && r.stack ? r.stack : r));
