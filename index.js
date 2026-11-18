@@ -257,6 +257,10 @@ bot.launch({ dropPendingUpdates: true }).then(async () => {
   }
 });
 
+bot.on('message', (ctx, next) => {
+  console.log(`[RECV] dari ${ctx.from?.id} (${ctx.from?.username || ctx.from?.first_name || '?'}): ${String(ctx.message?.text || ctx.message?.caption || '[bukan teks]').slice(0, 60)}`);
+  return next();
+});
 bot.on('polling_error', (e) => console.error('[POLLING]', e.message || e));
 process.on('uncaughtException', (err) => console.error('[UNCAUGHT]', err && err.stack ? err.stack : err));
 process.on('unhandledRejection', (r) => console.error('[UNHANDLED]', r && r.stack ? r.stack : r));
