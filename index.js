@@ -237,7 +237,24 @@ bot.on('text', async (msg) => {
 bot.launch({ dropPendingUpdates: true }).then(async () => {
   console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
   await recoverPendingDeliveries();
-}).catch(e => { console.error('[BOT] Gagal start:', e.message); process.exit(1); });
+}).catch(e => {
+  const msg = e.message || '';
+  if (msg.includes('409') || msg.includes('Conflict')) {
+    // Token dipakai instance lain — tunggu & coba lagi, jangan crash-loop.
+    console.error('[BOT] 409 Conflict: token BOT_TOKEN sedang dipakai bot lain di tempat lain.');
+    console.error('[BOT] Solusi: revoke token di @BotFather lalu isi BOT_TOKEN baru di .env');
+    console.error('[BOT] Menunggu 30 detik lalu coba lagi otomatis...');
+    setTimeout(() => {
+      bot.launch({ dropPendingUpdates: true }).then(async () => {
+        console.log(`[BOT] ${CFG.STORE_NAME} jalan | mode pembayaran: ${pay.ready() ? 'GOMERCH OTOMATIS' : 'MANUAL (ACC admin)'}`);
+        await recoverPendingDeliveries();
+      }).catch(() => setTimeout(() => process.exit(1), 30000));
+    }, 30000);
+  } else {
+    console.error('[BOT] Gagal start:', msg);
+    process.exit(1);
+  }
+});
 
 bot.on('polling_error', (e) => console.error('[POLLING]', e.message || e));
 process.on('uncaughtException', (err) => console.error('[UNCAUGHT]', err && err.stack ? err.stack : err));
